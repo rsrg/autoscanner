@@ -1,3 +1,5 @@
 Pillow==3.0.0
+PyInstaller==3.0
+pypiwin32==219
 PySide==1.2.4
 wheel==0.24.0

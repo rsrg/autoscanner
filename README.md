@@ -6,3 +6,6 @@ Install dependencies:
 
 Run application:
 >python autoscanner.py
+
+Build application for Windows:
+>pyinstaller --onefile --windowed autoscanner.py
