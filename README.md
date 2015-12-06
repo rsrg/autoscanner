@@ -1,5 +1,8 @@
 # autoscanner
 Capture and compare desktop snapshots
 
-pip install -r requirements.txt
-python autoscanner.py
+Install dependencies:
+>pip install -r requirements.txt
+
+Run application:
+>python autoscanner.py
