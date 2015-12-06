@@ -5,7 +5,7 @@ Created on 22 nov. 2015
 '''
 import sys
 import cStringIO
-import Image
+from PIL import Image
 
 from itertools import izip
 from PySide import QtGui, QtCore
