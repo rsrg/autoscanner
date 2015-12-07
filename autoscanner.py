@@ -53,23 +53,26 @@ class ImageProcessor(QtCore.QObject):
                 while not self.exiting and countdown > 0:
                     time.sleep(1)
                     countdown -= 1
-                
-                if not self.exiting:
-                    # request cyclic image
-                    self.request_image.emit()
-                    mutex.lock()
-                    waitCondition.wait(mutex)
-                    mutex.unlock()
-                    
-                    # convert cyclic image and compare images
-                    pil_img_cyclic = ScannerTools.convertImage(self.img_cyclic)
-                    result = ScannerTools.compareImages(pil_img_init, pil_img_cyclic)
-                    
-                    self.comparison_done.emit(result)
-                    
-                    if result > self.threshold:
-                        thr_exceeded = True
-                        break
+
+                if self.exiting: break
+
+                # request cyclic image
+                self.request_image.emit()
+                mutex.lock()
+                waitCondition.wait(mutex, time=3600)
+                mutex.unlock()
+
+                if self.exiting: break
+
+                # convert cyclic image and compare images
+                pil_img_cyclic = ScannerTools.convertImage(self.img_cyclic)
+                result = ScannerTools.compareImages(pil_img_init, pil_img_cyclic)
+
+                self.comparison_done.emit(result)
+
+                if result > self.threshold:
+                    thr_exceeded = True
+                    break
         
         self.finished.emit(thr_exceeded)
         
@@ -155,7 +158,8 @@ class MainWindow(QtGui.QMainWindow, gui_main.Ui_MainWindow):
         self.worker_thread.quit()
         
         while self.worker_thread.isRunning():
-                time.sleep(0.01)
+            time.sleep(0.01)
+            waitCondition.wakeOne()  # wake thread in case it's blocked at requesting an image
                 
         self.pushButton_start.setText("Start")
         self.pushButton_start.setEnabled(True)
