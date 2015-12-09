@@ -5,17 +5,16 @@ Created on 22 nov. 2015
 '''
 
 import sys
-
 from PySide import QtGui, QtCore
+from autoscanner.controller.scantools import ScanTools
 
-from scanner_tools import ScannerTools
 
 class TransparentWindow(QtGui.QDialog):
     OPACITY = 0.25
-    
+
     def __init__(self, parent=None):
         super(TransparentWindow, self).__init__(parent)
-        
+
         self.layout = QtGui.QGridLayout()
         self.setLayout(self.layout)
 
@@ -23,29 +22,30 @@ class TransparentWindow(QtGui.QDialog):
         self.showMaximized()
         self.activateWindow()
         self.raise_()
-        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint )
-        
-        screen_geometry = ScannerTools.getFullScreenGeometry()
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
+
+        screen_geometry = ScanTools.getFullScreenGeometry()
         self.setGeometry(screen_geometry)
-    
+
         self.rubber_band = QtGui.QRubberBand(QtGui.QRubberBand.Rectangle, self)
-    
+
     def mousePressEvent(self, event):
         self.origin = event.pos()
         self.rubber_band.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
         self.rubber_band.show()
-    
+
     def mouseMoveEvent(self, event):
         self.rubber_band.setGeometry(QtCore.QRect(self.origin, event.pos()).normalized())
-    
+
     def mouseReleaseEvent(self, event):
         self.rubber_band.hide()
         self.accept()
 
+
 def main():
     QtGui.QApplication(sys.argv)
     trans_window = TransparentWindow()
-    
+
     if trans_window.exec_():
         print trans_window.rubber_band.geometry()
     else:

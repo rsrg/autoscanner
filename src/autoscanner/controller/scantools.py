@@ -10,7 +10,7 @@ from PIL import Image
 from itertools import izip
 from PySide import QtGui, QtCore
 
-class ScannerTools():
+class ScanTools:
     
     @staticmethod
     def getFullScreenGeometry():
@@ -48,7 +48,7 @@ class ScannerTools():
 
 def main():
     QtGui.QApplication(sys.argv)
-    print ScannerTools.getFullScreenGeometry()
+    print ScanTools.getFullScreenGeometry()
 
 if __name__ == '__main__':
     main()

@@ -6,12 +6,12 @@ Created on 22 nov. 2015
 
 import sys
 import time
-import gui_main
-
 from PySide import QtGui, QtCore
-from transwin import TransparentWindow
-from scanner_tools import ScannerTools
-from redalert import RedAlert
+
+from autoscanner.view.gui_main import Ui_MainWindow
+from autoscanner.view.gui_transparent import TransparentWindow
+from autoscanner.controller.scantools import ScanTools
+from autoscanner.controller.redalert import RedAlert
 
 __appname__ = "Autoscanner 0.1"
 
@@ -45,7 +45,7 @@ class ImageProcessor(QtCore.QObject):
         thr_exceeded = False
         if self.configured:
             # convert initial image
-            pil_img_init = ScannerTools.convertImage(self.img_init)
+            pil_img_init = ScanTools.convertImage(self.img_init)
             
             while not self.exiting:
                 countdown = self.cycle_time
@@ -65,8 +65,8 @@ class ImageProcessor(QtCore.QObject):
                 if self.exiting: break
 
                 # convert cyclic image and compare images
-                pil_img_cyclic = ScannerTools.convertImage(self.img_cyclic)
-                result = ScannerTools.compareImages(pil_img_init, pil_img_cyclic)
+                pil_img_cyclic = ScanTools.convertImage(self.img_cyclic)
+                result = ScanTools.compareImages(pil_img_init, pil_img_cyclic)
 
                 self.comparison_done.emit(result)
 
@@ -76,7 +76,7 @@ class ImageProcessor(QtCore.QObject):
         
         self.finished.emit(thr_exceeded)
         
-class MainWindow(QtGui.QMainWindow, gui_main.Ui_MainWindow):
+class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -110,7 +110,7 @@ class MainWindow(QtGui.QMainWindow, gui_main.Ui_MainWindow):
         self.pushButton_start.clicked.connect(self._btnStartClicked)
     
     def _setResolutionLimits(self):
-        screen_geom = ScannerTools.getFullScreenGeometry()
+        screen_geom = ScanTools.getFullScreenGeometry()
         
         self.spinBox_x.setMinimum(screen_geom.x())
         self.spinBox_y.setMinimum(screen_geom.y())
@@ -213,11 +213,8 @@ class MainWindow(QtGui.QMainWindow, gui_main.Ui_MainWindow):
             self.image_processor.exiting = True
             self.pushButton_start.setEnabled(False)
 
-def main():
-    app = QtGui.QApplication(sys.argv)
+def run():
+    appl = QtGui.QApplication(sys.argv)
     form = MainWindow()
     form.show()
-    app.exec_()
-
-if __name__ == '__main__':
-    main()
+    appl.exec_()
