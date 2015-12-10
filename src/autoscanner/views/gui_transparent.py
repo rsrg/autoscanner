@@ -1,15 +1,18 @@
-'''
+"""
 Created on 22 nov. 2015
 
 @author: Valtyr Farshield
-'''
+"""
 
 import sys
 from PySide import QtGui, QtCore
-from autoscanner.controller.scantools import ScanTools
+from autoscanner.tools.scantools import ScanTools
 
 
 class TransparentWindow(QtGui.QDialog):
+    """
+    Full-screen transparent window used for defining a capture zone
+    """
     OPACITY = 0.25
 
     def __init__(self, parent=None):
@@ -24,9 +27,9 @@ class TransparentWindow(QtGui.QDialog):
         self.raise_()
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
 
-        screen_geometry = ScanTools.getFullScreenGeometry()
+        self.origin = None
+        screen_geometry = ScanTools.get_full_screen_geometry()
         self.setGeometry(screen_geometry)
-
         self.rubber_band = QtGui.QRubberBand(QtGui.QRubberBand.Rectangle, self)
 
     def mousePressEvent(self, event):

@@ -1,4 +1,8 @@
-# main.py
+"""
+Created on 22 nov. 2015
+
+@author: Valtyr Farshield
+"""
 
 
 def main():
