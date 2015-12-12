@@ -57,18 +57,18 @@ def main():
 
             # Thread config
             self.worker_thread = QtCore.QThread()
-            self.red_alert = SoundAlert()
-            self.red_alert.moveToThread(self.worker_thread)
-            self.red_alert.finished.connect(self.worker_thread.quit)
-            self.worker_thread.started.connect(self.red_alert.process)
+            self.sound_alert = SoundAlert()
+            self.sound_alert.moveToThread(self.worker_thread)
+            self.sound_alert.finished.connect(self.worker_thread.quit)
+            self.worker_thread.started.connect(self.sound_alert.process)
 
         @QtCore.Slot()
         def alarm_start(self):
-            self.red_alert.exiting = False
+            self.sound_alert.exiting = False
             self.worker_thread.start()
 
             QtGui.QMessageBox.information(self, "test", "test")
-            self.red_alert.exiting = True
+            self.sound_alert.exiting = True
 
     app = QtGui.QApplication(sys.argv)
     form = Form()
